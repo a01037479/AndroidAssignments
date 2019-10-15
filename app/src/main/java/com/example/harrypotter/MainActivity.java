@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("publisher", book.publisher);
                 intent.putExtra("publish_date", book.publishedDate);
                 intent.putExtra("description", book.description);
+                intent.putExtra("url", book.thumbNailUrl);
 
                 MainActivity.this.startActivity(intent);
             }

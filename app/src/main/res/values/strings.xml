@@ -1,5 +1,7 @@
 <resources>
-    <string name="app_name">HarryPotter</string>
+    <string name="app_name">HarryPotter
+        <string name="app_credits"><font size="15" textAlignment="viewEnd"> - Daria Dimchuk and Eric Zhang</font></string>
+    </string>
     <string name="action_settings">Settings</string>
 
     <string name="title_label">Title:</string>
