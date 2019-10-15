@@ -1,6 +1,7 @@
 package com.example.harrypotter;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -14,6 +15,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -40,6 +44,27 @@ public class MainActivity extends AppCompatActivity {
         bookList = new ArrayList<Book>();
         lv = findViewById(R.id.bookList);
         new GetContacts().execute();
+
+
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+                Intent intent = new Intent(MainActivity.this, BookDetailsActivity.class);
+
+                BookAdapter t = (BookAdapter) lv.getAdapter();
+                Book book = t.getItem(position);
+
+                intent.putExtra("title", book.title);
+                intent.putExtra("isbn", book.ISBN);
+                intent.putExtra("authors", book.authors);
+                intent.putExtra("publisher", book.publisher);
+                intent.putExtra("publish_date", book.publishedDate);
+                intent.putExtra("description", book.description);
+
+                MainActivity.this.startActivity(intent);
+            }
+        });
+
     }
 
 
@@ -68,8 +93,6 @@ public class MainActivity extends AppCompatActivity {
 
             if (jsonStr != null) {
                 try {
-                    //JSONObject jsonObj = new JSONObject(jsonStr);
-
                     // Getting JSON Array node
                     JSONObject obj = new JSONObject(jsonStr);
                     JSONArray bookJsonArray = obj.getJSONArray("items");
@@ -92,7 +115,8 @@ public class MainActivity extends AppCompatActivity {
 
                             String publisher = volumeinfo.getString("publisher");
                             String publishedDate = volumeinfo.getString("publishedDate");
-                            String description = volumeinfo.getString("description");
+
+                            String description = volumeinfo.has("description") ? volumeinfo.getString("description") : "";
 
 
                             JSONArray industry = volumeinfo.getJSONArray("industryIdentifiers");
@@ -106,27 +130,17 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             }
 
-
                             JSONObject image = volumeinfo.getJSONObject("imageLinks");
                             String url = image.getString("thumbnail");
 
 
 
                             // tmp hash map for single contact
-                            Book book = new Book();
-
-                            // adding each child node to HashMap key => value
-                            book.setId(id);
-                            book.setTitle(title);
-                            book.setAuthors(authors);
-                            book.setPublisher(publisher);
-                            book.setPublishedDate(publishedDate);
-                            book.setDescription(description);
-                            book.setISBN(ISBN);
-                            book.setThumbNailUrl(url);
+                            Book book = new Book(id, title, authors, publisher, publishedDate, description, ISBN, url);
 
                             // adding contact to contact list
                             bookList.add(book);
+
                         }catch(Exception e){
                             continue;
                         }

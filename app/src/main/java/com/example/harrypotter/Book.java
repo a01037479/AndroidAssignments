@@ -11,6 +11,20 @@ public class Book {
     public String description;
     public String ISBN;
 
+    public Book(){}
+
+    public Book(String id, String title, String[] authorList, String publisher, String publishDate, String description, String ISBN, String url){
+        this.id = id;
+        this.title = title;
+        this.authors = authorList;
+        this.publisher = publisher;
+        this.publishedDate = publishDate;
+        this.description = description;
+        this.ISBN = ISBN;
+        this.thumbNailUrl = url;
+    }
+
+
     public String getId() {
         return id;
     }
