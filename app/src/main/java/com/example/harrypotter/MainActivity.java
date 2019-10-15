@@ -39,8 +39,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(android.R.style.);
         setContentView(R.layout.activity_main);
-
         bookList = new ArrayList<Book>();
         lv = findViewById(R.id.bookList);
         new GetContacts().execute();
@@ -189,6 +189,10 @@ public class MainActivity extends AppCompatActivity {
 
             // Attach the adapter to a ListView
             lv.setAdapter(adapter);
+        }
+
+        public void changeTheme(View view){
+            setTheme(darkTheme ? R.style.AppThemeDark : R.style.AppThemeLight);
         }
     }
 

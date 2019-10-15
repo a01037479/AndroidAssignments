@@ -10,4 +10,5 @@
     <string name="publish_date_label">Publish Date:</string>
     <string name="description_label">Description:</string>
     <string name="isbn_label">ISBN:</string>
+    <string name="chanage_theme_btn_label">Change App Theme</string>
 </resources>
