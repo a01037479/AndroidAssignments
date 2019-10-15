@@ -19,6 +19,11 @@ public class BookAdapter extends ArrayAdapter<Book> {
     }
 
     @Override
+    public boolean hasStableIds() {
+        return true;
+    }
+
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final Activity activity = (Activity) _context;
         // Get the data item for this position

@@ -1,6 +1,7 @@
 package com.example.harrypotter;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -14,6 +15,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -40,6 +44,27 @@ public class MainActivity extends AppCompatActivity {
         bookList = new ArrayList<Book>();
         lv = findViewById(R.id.bookList);
         new GetContacts().execute();
+
+
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+                Intent intent = new Intent(MainActivity.this, BookDetailsActivity.class);
+
+                BookAdapter t = (BookAdapter) lv.getAdapter();
+                Book book = t.getItem(position);
+
+                intent.putExtra("title", book.title);
+                intent.putExtra("isbn", book.ISBN);
+                intent.putExtra("authors", book.authors);
+                intent.putExtra("publisher", book.publisher);
+                intent.putExtra("publish_date", book.publishedDate);
+                intent.putExtra("description", book.description);
+
+                MainActivity.this.startActivity(intent);
+            }
+        });
+
     }
 
 
