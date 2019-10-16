@@ -2,21 +2,23 @@ package com.example.harrypotter;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
+import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Adapter;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -38,22 +40,34 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(getFlag()?R.style.DarkMode: R.style.AppTheme);
+
         super.onCreate(savedInstanceState);
-        setTheme(android.R.style.);
         setContentView(R.layout.activity_main);
         bookList = new ArrayList<Book>();
         lv = findViewById(R.id.bookList);
         new GetContacts().execute();
+
+        Button chg_theme_btn = findViewById(R.id.changeThemeBtn);
+        chg_theme_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v){
+                saveFlag(!getFlag());
+                Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
 
 
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id){
                 Intent intent = new Intent(MainActivity.this, BookDetailsActivity.class);
-
+                String theme = (getFlag()?"dark":"light");
                 BookAdapter t = (BookAdapter) lv.getAdapter();
                 Book book = t.getItem(position);
-
                 intent.putExtra("title", book.title);
                 intent.putExtra("isbn", book.ISBN);
                 intent.putExtra("authors", book.authors);
@@ -61,13 +75,24 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("publish_date", book.publishedDate);
                 intent.putExtra("description", book.description);
                 intent.putExtra("url", book.thumbNailUrl);
-
+                intent.putExtra("theme", theme);
                 MainActivity.this.startActivity(intent);
             }
         });
 
     }
 
+    private void saveFlag(boolean flag){
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean("dark",flag);
+        editor.commit();
+    }
+
+    private boolean getFlag() {
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
+        return pref.getBoolean("dark", false);
+    }
 
     private class GetContacts extends AsyncTask<Void, Void, Void> {
 
@@ -191,9 +216,6 @@ public class MainActivity extends AppCompatActivity {
             lv.setAdapter(adapter);
         }
 
-        public void changeTheme(View view){
-            setTheme(darkTheme ? R.style.AppThemeDark : R.style.AppThemeLight);
-        }
     }
 
 }
