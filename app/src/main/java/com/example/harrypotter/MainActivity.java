@@ -3,28 +3,16 @@ package com.example.harrypotter;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -34,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private String TAG = MainActivity.class.getSimpleName();
     private ProgressDialog pDialog;
     private ListView lv;
-    // URL to get contacts JSON
+    // URL to get book data in JSON
     private static String SERVICE_URL = "https://www.googleapis.com/books/v1/volumes?q=harry+potter";
     private ArrayList<Book> bookList;
 
@@ -44,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         bookList = new ArrayList<Book>();
         lv = findViewById(R.id.bookList);
         new GetContacts().execute();
@@ -53,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(final View v){
                 saveFlag(!getFlag());
+
+                //refresh this activity to get updated theme
                 Intent intent = new Intent(MainActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
@@ -60,22 +51,16 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
-
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id){
                 Intent intent = new Intent(MainActivity.this, BookDetailsActivity.class);
                 String theme = (getFlag()?"dark":"light");
-                BookAdapter t = (BookAdapter) lv.getAdapter();
-                Book book = t.getItem(position);
-                intent.putExtra("title", book.title);
-                intent.putExtra("isbn", book.ISBN);
-                intent.putExtra("authors", book.authors);
-                intent.putExtra("publisher", book.publisher);
-                intent.putExtra("publish_date", book.publishedDate);
-                intent.putExtra("description", book.description);
-                intent.putExtra("url", book.thumbNailUrl);
                 intent.putExtra("theme", theme);
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("book", bookList.get(position));
+                intent.putExtra("bundle", bundle);
+                
                 MainActivity.this.startActivity(intent);
             }
         });
@@ -159,12 +144,10 @@ public class MainActivity extends AppCompatActivity {
                             JSONObject image = volumeinfo.getJSONObject("imageLinks");
                             String url = image.getString("thumbnail");
 
-
-
-                            // tmp hash map for single contact
+                            //build book
                             Book book = new Book(id, title, authors, publisher, publishedDate, description, ISBN, url);
 
-                            // adding contact to contact list
+                            // adding book to books list
                             bookList.add(book);
 
                         }catch(Exception e){
@@ -178,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             Toast.makeText(getApplicationContext(),
-                                    "Json parsing error: ", //+ e.getMessage(),
+                                    "Json parsing error",
                                     Toast.LENGTH_LONG)
                                     .show();
                         }

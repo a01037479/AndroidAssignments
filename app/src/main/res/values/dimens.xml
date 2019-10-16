@@ -1,3 +1,15 @@
 <resources>
-    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="margin_5">5dp</dimen>
+    <dimen name="margin_10">10dp</dimen>
+    <dimen name="margin_15">15dp</dimen>
+    <dimen name="margin_20">20dp</dimen>
+
+
+    <dimen name="row_layout_size">70dp</dimen>
+    <dimen name="authors_max_width">170dp</dimen>
+
+    <dimen name="title_size">17sp</dimen>
+    <dimen name="cover_img_width">126dp</dimen>
+    <dimen name="cover_img_height">174dp</dimen>
+
 </resources>

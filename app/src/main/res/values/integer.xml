@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <item type="integer"  name="table_key_layout_weight">1.5</item>
+    <item type="integer" name="table_value_layout_weight">2.5</item>
+</resources>

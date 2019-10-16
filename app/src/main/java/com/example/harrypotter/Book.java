@@ -1,15 +1,15 @@
 package com.example.harrypotter;
 
-public class Book {
+public class Book implements java.io.Serializable{
 
-    public String id;
-    public String title;
-    public String thumbNailUrl;
-    public String[] authors;
-    public String publisher;
-    public String publishedDate;
-    public String description;
-    public String ISBN;
+    private String id;
+    private String title;
+    private String thumbNailUrl;
+    private String[] authors;
+    private String publisher;
+    private String publishedDate;
+    private String description;
+    private String ISBN;
 
     public Book(){}
 

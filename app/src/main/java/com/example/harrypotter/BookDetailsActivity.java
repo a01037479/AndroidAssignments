@@ -3,12 +3,8 @@ package com.example.harrypotter;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,55 +15,57 @@ public class BookDetailsActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
-
-
         Intent intent = getIntent();
 
-        String title = intent.getStringExtra("title");
-        String isbn = intent.getStringExtra("isbn");
-        String[] authors = intent.getStringArrayExtra("authors");
-        String publisher = intent.getStringExtra("publisher");
-        String publishDate = intent.getStringExtra("publish_date");
-        String description = intent.getStringExtra("description");
-        String url = intent.getStringExtra("url");
-        String theme = intent.getStringExtra("theme");
-
+        //update theme based on main theme
+	    String theme = intent.getStringExtra("theme");
         this.setTheme(theme.equals("dark")?R.style.DarkMode_NoActionBar:R.style.AppTheme_NoActionBar);
-
+        
         setContentView(R.layout.activity_book_details);
 
+
+        //get book data
+        Bundle bundle = intent.getBundleExtra("bundle");
+        Book book = (Book)bundle.get("book");
+
+
+        updateViewText(book);
+
+    }
+
+
+    private void updateViewText(Book book){
         TextView txtTitle = findViewById(R.id.txtTitle);
-        txtTitle.setText(title);
+        txtTitle.setText(book.getTitle());
 
         TextView txtAuthors = findViewById(R.id.txtAuthors);
-        txtAuthors.setText(normalizeStringArray(authors));
+        txtAuthors.setText(normalizeStringArray(book.getAuthors()));
 
         TextView txtISBN = findViewById(R.id.txtISBN);
-        txtISBN.setText(isbn);
+        txtISBN.setText(book.getISBN());
 
         TextView txtPublisher = findViewById(R.id.txtPublisher);
-        txtPublisher.setText(publisher);
+        txtPublisher.setText(book.getPublisher());
 
         TextView txtPublishDate = findViewById(R.id.txtPublishDate);
-        txtPublishDate.setText(publishDate);
+        txtPublishDate.setText(book.getPublishedDate());
 
         TextView txtDescription = findViewById(R.id.txtDescription);
-        txtDescription.setText(description);
+        txtDescription.setText(book.getDescription());
 
-        if(description.isEmpty()){
+        if(book.getDescription().isEmpty()){
             TextView lblDescription = findViewById(R.id.lblDescription);
             lblDescription.setText("No description.");
         }
 
         txtDescription.setMovementMethod(new ScrollingMovementMethod());
 
-        if(url != null){
+        if(book.getThumbNailUrl() != null){
             ImageView img = findViewById(R.id.imgBookCover);
-            new ImageDownloaderTask(img).execute(url);
+            new ImageDownloaderTask(img).execute(book.getThumbNailUrl());
         }
-
-
     }
+
 
     private String normalizeStringArray(String[] arr){
         StringBuilder result = new StringBuilder();
